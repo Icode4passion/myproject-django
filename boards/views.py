@@ -9,6 +9,7 @@ from django.db.models import Count
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.urls import reverse
 # Create your views here.
 
 # def home(request):
@@ -127,20 +128,20 @@ def new_topic(request,pk):
 #     return render(request, 'topic_posts.html', {'topic':topic})
 
 
-
 @login_required
-def reply_topic(request,pk,topic_pk):
-    topic = get_object_or_404(Topic,board__pk = pk ,pk = topic_pk)
-    if request.method =='POST':
+def reply_topic(request, pk, topic_pk):
+    topic = get_object_or_404(Topic, board__pk=pk, pk=topic_pk)
+    if request.method == 'POST':
         form = PostForm(request.POST)
-        if  form.is_valid():
-            post= form.save(commit=False)
+        if form.is_valid():
+            post = form.save(commit=False)
             post.topic = topic
             post.created_by = request.user
             post.save()
 
-            topic.last_update = timezone.now()
+            topic.last_updated = timezone.now()
             topic.save()
+
             topic_url = reverse('topic_posts', kwargs={'pk': pk, 'topic_pk': topic_pk})
             topic_post_url = '{url}?page={page}#{id}'.format(
                 url=topic_url,
@@ -149,8 +150,9 @@ def reply_topic(request,pk,topic_pk):
             )
 
             return redirect(topic_post_url)
+    else:
         form = PostForm()
-    return render(request,'reply_topic.html',{'topic':topic , 'form':form})
+    return render(request, 'reply_topic.html', {'topic': topic, 'form': form})
 
 @method_decorator(login_required, name='dispatch')
 class PostUpdateView(UpdateView):

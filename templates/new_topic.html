@@ -1,0 +1,45 @@
+
+
+
+{% extends 'base.html' %}
+{% block title %}
+Start New Topic
+{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"> <a href="{% url 'home'  %}">Boards</a></li>
+<li class="breadcrumb-item"> <a href="{% url 'board_topics' board.pk  %}">{{ board.name }}</a> </li>
+<li class="breadcrumb-item active">New Topic</li>
+{% endblock %}
+
+
+{% block content %}
+<form method="POST">
+    {% csrf_token  %}
+
+
+    <!-- for the form styling we installed 'widget_tweaks' module in django and for the same we have 
+    includes a seperate Html file for form validation as well -->
+
+    {% include 'includes/form.html' %}
+
+
+
+    <!-- <div class="form-group">
+        <label for="id_subject">Subject</label>
+        <input type="text" class="form-control" id="id_subject" name="subject">
+    </div>
+    <div class="form-group">
+        <label for="id_message">Message</label>
+        <textarea name="message" id="id_message" class="form-control"></textarea>
+    </div> -->
+
+    <!-- instead of all the above code djsngo provides us with a feature to show the exact same functionality in html by using  -->
+    <!-- {{ form.as_p }} -->
+
+    <!-- form have three rendering options: form.as_table, form.as_ul, and form.as_p. It’s a quick way to render all the 
+    fields of a form. As the name suggests, the as_table uses table tags to format the inputs, the as_ul creates an HTML list of inputs, etc. -->
+    <button type="submit"class='btn btn-success' >Post</button>
+</form>
+
+{% endblock %}
